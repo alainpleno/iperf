@@ -4306,6 +4306,7 @@ iperf_new_stream(struct iperf_test *test, int s, int sender)
 
     /* Create and randomize the buffer */
     sp->buffer_fd = mkstemp(template);
+    printf("API%d: mkstemp() %s\n", __LINE__, template);
     if (sp->buffer_fd == -1) {
         i_errno = IECREATESTREAM;
         free(sp->result);
@@ -4331,6 +4332,7 @@ iperf_new_stream(struct iperf_test *test, int s, int sender)
         free(sp);
         return NULL;
     }
+    printf("API%d: mmap() %p, %d\n", __LINE__, sp->buffer, test->settings->blksize);
     sp->pending_size = 0;
 
     /* Set socket */
@@ -4340,6 +4342,7 @@ iperf_new_stream(struct iperf_test *test, int s, int sender)
     sp->rcv = test->protocol->recv;
 
     if (test->diskfile_name != (char*) 0) {
+    printf("API%d: diskfile_name %s\n", __LINE__, test->diskfile_name);
 	sp->diskfile_fd = open(test->diskfile_name, sender ? O_RDONLY : (O_WRONLY|O_CREAT|O_TRUNC), S_IRUSR|S_IWUSR);
 	if (sp->diskfile_fd == -1) {
 	    i_errno = IEFILE;
@@ -4368,6 +4371,7 @@ iperf_new_stream(struct iperf_test *test, int s, int sender)
         free(sp);
         return NULL;
     }
+    printf("API%d: add stream\n", __LINE__);
     iperf_add_stream(test, sp);
 
     return sp;
