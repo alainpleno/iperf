@@ -129,6 +129,7 @@ iperf_accept(struct iperf_test *test)
             i_errno = IESETNODELAY;
             return -1;
         }
+        printf("SRV%d: TCP_NODELAY %d\n", __LINE__, flag);
 
 #if defined(HAVE_TCP_USER_TIMEOUT)
         int opt;
@@ -137,6 +138,7 @@ iperf_accept(struct iperf_test *test)
                 i_errno = IESETUSERTIMEOUT;
                 return -1;
             }
+            printf("SRV%d: TCP_USER_TIMEOUT %d\n", __LINE__, opt);
         }
 #endif /* HAVE_TCP_USER_TIMEOUT */
 
@@ -630,6 +632,7 @@ iperf_run_server(struct iperf_test *test)
                                 i_errno = IESETUSERTIMEOUT;
                                 return -1;
                             }
+                            printf("SRV%d: TCP_USER_TIMEOUT %d\n", __LINE__, opt);
                         }
                     }
 #endif /* HAVE_TCP_USER_TIMEOUT */
@@ -659,6 +662,7 @@ iperf_run_server(struct iperf_test *test)
 				    return -1;
 				}
 			    }
+                printf("SRV%d: TCP_CONGESTION %s\n", __LINE__, test->congestion);
 			}
 			{
 			    socklen_t len = TCP_CA_NAME_MAX;
@@ -673,6 +677,7 @@ iperf_run_server(struct iperf_test *test)
 				i_errno = IESETCONGESTION;
 				return -1;
 			    }
+                printf("SRV%d: TCP_CONGESTION %s\n", __LINE__, ca);
                             /*
                              * If not the first connection, discard prior
                              * congestion algorithm name so we don't leak

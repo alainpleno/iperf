@@ -524,6 +524,7 @@ setnonblocking(int fd, int nonblocking)
 	    perror("fcntl(F_SETFL)");
 	    return -1;
 	}
+    printf("NET%d: nonblocking %d\n", __LINE__, nonblocking);
     return 0;
 }
 

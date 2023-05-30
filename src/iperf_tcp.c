@@ -210,6 +210,7 @@ iperf_tcp_listen(struct iperf_test *test)
                 i_errno = IESETNODELAY;
                 return -1;
             }
+            printf("TCP%d: TCP_NODELAY %d\n", __LINE__, opt);
         }
         // XXX: Setting MSS is very buggy!
         if ((opt = test->settings->mss)) {
@@ -221,6 +222,7 @@ iperf_tcp_listen(struct iperf_test *test)
                 i_errno = IESETMSS;
                 return -1;
             }
+            printf("TCP%d: TCP_MAXSEG %d\n", __LINE__, opt);
         }
         if ((opt = test->settings->socket_bufsize)) {
             if (setsockopt(s, SOL_SOCKET, SO_RCVBUF, &opt, sizeof(opt)) < 0) {
@@ -231,6 +233,8 @@ iperf_tcp_listen(struct iperf_test *test)
                 i_errno = IESETBUF;
                 return -1;
             }
+            printf("TCP%d: SO_RCVBUF %d\n", __LINE__, opt);
+
             if (setsockopt(s, SOL_SOCKET, SO_SNDBUF, &opt, sizeof(opt)) < 0) {
 		saved_errno = errno;
 		close(s);
@@ -239,6 +243,7 @@ iperf_tcp_listen(struct iperf_test *test)
                 i_errno = IESETBUF;
                 return -1;
             }
+            printf("TCP%d: SO_SNDBUF %d\n", __LINE__, opt);
         }
 #if defined(HAVE_SO_MAX_PACING_RATE)
     /* If fq socket pacing is specified, enable it. */
@@ -252,6 +257,7 @@ iperf_tcp_listen(struct iperf_test *test)
 	    if (setsockopt(s, SOL_SOCKET, SO_MAX_PACING_RATE, &fqrate, sizeof(fqrate)) < 0) {
 		warning("Unable to set socket pacing");
 	    }
+        printf("TCP%d: SO_MAX_PACING_RATE %u\n", __LINE__, fqrate);
 	}
     }
 #endif /* HAVE_SO_MAX_PACING_RATE */
@@ -272,6 +278,7 @@ iperf_tcp_listen(struct iperf_test *test)
             i_errno = IEREUSEADDR;
             return -1;
         }
+        printf("TCP%d: SO_REUSEADDR %d\n", __LINE__, opt);
 
 	/*
 	 * If we got an IPv6 socket, figure out if it should accept IPv4
@@ -324,6 +331,8 @@ iperf_tcp_listen(struct iperf_test *test)
 	i_errno = IESETBUF;
 	return -1;
     }
+    printf("TCP%d: SO_SNDBUF readback %d\n", __LINE__, sndbuf_actual);
+
     if (test->debug) {
 	printf("SNDBUF is %u, expecting %u\n", sndbuf_actual, test->settings->socket_bufsize);
     }
@@ -331,6 +340,7 @@ iperf_tcp_listen(struct iperf_test *test)
 	i_errno = IESETBUF2;
 	return -1;
     }
+    printf("TCP%d: SO_SNDBUF check %d >? %d\n", __LINE__, test->settings->socket_bufsize, sndbuf_actual);
 
     /* Read back and verify the receiver socket buffer size */
     optlen = sizeof(rcvbuf_actual);
@@ -341,6 +351,8 @@ iperf_tcp_listen(struct iperf_test *test)
 	i_errno = IESETBUF;
 	return -1;
     }
+    printf("TCP%d: SO_RCVBUF readback %d\n", __LINE__, rcvbuf_actual);
+
     if (test->debug) {
 	printf("RCVBUF is %u, expecting %u\n", rcvbuf_actual, test->settings->socket_bufsize);
     }
@@ -348,6 +360,7 @@ iperf_tcp_listen(struct iperf_test *test)
 	i_errno = IESETBUF2;
 	return -1;
     }
+    printf("TCP%d: SO_RCVBUF check %d >? %d\n", __LINE__, test->settings->socket_bufsize, rcvbuf_actual);
 
     if (test->json_output) {
 	cJSON_AddNumberToObject(test->json_start, "sock_bufsize", test->settings->socket_bufsize);
@@ -392,6 +405,7 @@ iperf_tcp_connect(struct iperf_test *test)
             i_errno = IESETNODELAY;
             return -1;
         }
+        printf("TCP%d: TCP_NODELAY %d\n", __LINE__, opt);
     }
     if ((opt = test->settings->mss)) {
         if (setsockopt(s, IPPROTO_TCP, TCP_MAXSEG, &opt, sizeof(opt)) < 0) {
@@ -402,6 +416,7 @@ iperf_tcp_connect(struct iperf_test *test)
             i_errno = IESETMSS;
             return -1;
         }
+        printf("TCP%d: TCP_MAXSEG %d\n", __LINE__, opt);
     }
     if ((opt = test->settings->socket_bufsize)) {
         if (setsockopt(s, SOL_SOCKET, SO_RCVBUF, &opt, sizeof(opt)) < 0) {
@@ -412,6 +427,7 @@ iperf_tcp_connect(struct iperf_test *test)
             i_errno = IESETBUF;
             return -1;
         }
+        printf("TCP%d: SO_RCVBUF %d\n", __LINE__, opt);
         if (setsockopt(s, SOL_SOCKET, SO_SNDBUF, &opt, sizeof(opt)) < 0) {
 	    saved_errno = errno;
 	    close(s);
@@ -420,6 +436,7 @@ iperf_tcp_connect(struct iperf_test *test)
             i_errno = IESETBUF;
             return -1;
         }
+        printf("TCP%d: SO_SNDBUF %d\n", __LINE__, opt);
     }
 #if defined(HAVE_TCP_USER_TIMEOUT)
     if ((opt = test->settings->snd_timeout)) {
@@ -431,6 +448,7 @@ iperf_tcp_connect(struct iperf_test *test)
             i_errno = IESETUSERTIMEOUT;
             return -1;
         }
+        printf("TCP%d: TCP_USER_TIMEOUT %d\n", __LINE__, opt);
     }
 #endif /* HAVE_TCP_USER_TIMEOUT */
 
@@ -444,6 +462,8 @@ iperf_tcp_connect(struct iperf_test *test)
 	i_errno = IESETBUF;
 	return -1;
     }
+    printf("TCP%d: SO_SNDBUF readback %d\n", __LINE__, sndbuf_actual);
+
     if (test->debug) {
 	printf("SNDBUF is %u, expecting %u\n", sndbuf_actual, test->settings->socket_bufsize);
     }
@@ -451,6 +471,7 @@ iperf_tcp_connect(struct iperf_test *test)
 	i_errno = IESETBUF2;
 	return -1;
     }
+    printf("TCP%d: SO_SNDBUF check %d > %d\n", __LINE__, test->settings->socket_bufsize, sndbuf_actual);
 
     /* Read back and verify the receiver socket buffer size */
     optlen = sizeof(rcvbuf_actual);
@@ -462,6 +483,8 @@ iperf_tcp_connect(struct iperf_test *test)
 	i_errno = IESETBUF;
 	return -1;
     }
+    printf("TCP%d: SO_RCVBUF readback %d\n", __LINE__, rcvbuf_actual);
+
     if (test->debug) {
 	printf("RCVBUF is %u, expecting %u\n", rcvbuf_actual, test->settings->socket_bufsize);
     }
@@ -469,6 +492,7 @@ iperf_tcp_connect(struct iperf_test *test)
 	i_errno = IESETBUF2;
 	return -1;
     }
+    printf("TCP%d: SO_RCVBUF check %d > %d\n", __LINE__, test->settings->socket_bufsize, rcvbuf_actual);
 
     if (test->json_output) {
     cJSON *sock_bufsize_item = cJSON_GetObjectItem(test->json_start, "sock_bufsize");
@@ -544,6 +568,7 @@ iperf_tcp_connect(struct iperf_test *test)
 	    if (setsockopt(s, SOL_SOCKET, SO_MAX_PACING_RATE, &fqrate, sizeof(fqrate)) < 0) {
 		warning("Unable to set socket pacing");
 	    }
+        printf("TCP%d: SO_MAX_PACING_RATE %u\n", __LINE__, fqrate);
 	}
     }
 #endif /* HAVE_SO_MAX_PACING_RATE */
