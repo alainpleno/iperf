@@ -89,10 +89,10 @@ iperf_tcp_send(struct iperf_stream *sp)
 	sp->pending_size = sp->settings->blksize;
 
     if (sp->test->zerocopy) {
-        printf("TCP%d: Nsendfile (zc) %d\n", __LINE__, sp->pending_size);
+        //printf("TCP%d: Nsendfile (zc) %d\n", __LINE__, sp->pending_size);
         r = Nsendfile(sp->buffer_fd, sp->socket, sp->buffer, sp->pending_size);
     } else {
-        printf("TCP%d: Nwrite %d\n", __LINE__, sp->pending_size);
+        //printf("TCP%d: Nwrite %d\n", __LINE__, sp->pending_size);
         r = Nwrite(sp->socket, sp->buffer, sp->pending_size, Ptcp);
     }
 
