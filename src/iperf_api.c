@@ -4393,6 +4393,7 @@ iperf_common_sockopts(struct iperf_test *test, int s)
 	    if (iperf_get_mapped_v4(test)) {
 		if (setsockopt(s, IPPROTO_IP, IP_TOS, &opt, sizeof(opt)) < 0) {
                     /* ignore any failure of v4 TOS in IPv6 case */
+                    printf("API%d: IP_TOS %d, error %s\n", __LINE__, opt, strerror(errno));
                 }
             }
 #else
@@ -4401,9 +4402,11 @@ iperf_common_sockopts(struct iperf_test *test, int s)
 #endif
         } else {
             if (setsockopt(s, IPPROTO_IP, IP_TOS, &opt, sizeof(opt)) < 0) {
+                printf("API%d: IP_TOS %d, error %s\n", __LINE__, opt, strerror(errno));
                 i_errno = IESETTOS;
                 return -1;
             }
+            printf("API%d: IP_TOS %d, OK\n", __LINE__, opt);
         }
     }
     return 0;

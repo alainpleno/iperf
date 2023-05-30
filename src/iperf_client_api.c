@@ -393,6 +393,7 @@ iperf_connect(struct iperf_test *test)
 
 #if defined(HAVE_TCP_USER_TIMEOUT)
     if ((opt = test->settings->snd_timeout)) {
+        printf("CLI%d: user timeout %d\n", __LINE__, opt);
         if (setsockopt(test->ctrl_sck, IPPROTO_TCP, TCP_USER_TIMEOUT, &opt, sizeof(opt)) < 0) {
         i_errno = IESETUSERTIMEOUT;
         return -1;
@@ -410,11 +411,13 @@ iperf_connect(struct iperf_test *test)
 
     len = sizeof(opt);
     if (getsockopt(test->ctrl_sck, IPPROTO_TCP, TCP_MAXSEG, &opt, &len) < 0) {
+        printf("CLI%d: TCP_MAXSEG %s\n", __LINE__, strerror(errno));
         test->ctrl_sck_mss = 0;
     }
     else {
         if (opt > 0 && opt <= MAX_UDP_BLOCKSIZE) {
             test->ctrl_sck_mss = opt;
+            printf("CLI%d: MSS=%d\n", __LINE__, opt);
         }
         else {
             char str[WARN_STR_LEN];
@@ -422,6 +425,7 @@ iperf_connect(struct iperf_test *test)
                      "Ignoring nonsense TCP MSS %d", opt);
             warning(str);
 
+            printf("CLI%d: %d not in 0..%d\n", __LINE__, opt, MAX_UDP_BLOCKSIZE);
             test->ctrl_sck_mss = 0;
         }
     }
