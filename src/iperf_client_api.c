@@ -104,7 +104,7 @@ iperf_create_streams(struct iperf_test *test, int sender)
 		    i_errno = IESETCONGESTION;
 		    return -1;
 		}
-        printf("TCP%d: CA=%s\n", __LINE__, ca);
+        printf("CLI%d: CA=%s\n", __LINE__, ca);
                 // Set actual used congestion alg, or set to unknown if could not get it
                 if (rc < 0)
                     test->congestion_used = strdup("unknown");

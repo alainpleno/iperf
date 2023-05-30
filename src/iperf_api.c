@@ -4451,6 +4451,7 @@ iperf_init_stream(struct iperf_stream *sp, struct iperf_test *test)
             i_errno = IESETDONTFRAGMENT;
             return -1;
         }
+        printf("API%d: IP_MTU_DISCOVER %d\n", __LINE__, opt);
 #else
 #if defined(IP_DONTFRAG) /* UNIX does IP_DONTFRAG */
         opt = 1;
@@ -4458,6 +4459,7 @@ iperf_init_stream(struct iperf_stream *sp, struct iperf_test *test)
             i_errno = IESETDONTFRAGMENT;
             return -1;
         }
+        printf("API%d: IP_DONTFRAG\n", __LINE__);
 #else
 #if defined(IP_DONTFRAGMENT) /* Windows does IP_DONTFRAGMENT */
         opt = 1;
@@ -4775,6 +4777,7 @@ iperf_setaffinity(struct iperf_test *test, int affinity)
 	i_errno = IEAFFINITY;
         return -1;
     }
+    printf("API%d: set affinity %d\n", __LINE__, affinity);
     return 0;
 #elif defined(HAVE_CPUSET_SETAFFINITY)
     cpuset_t cpumask;
@@ -4793,11 +4796,13 @@ iperf_setaffinity(struct iperf_test *test, int affinity)
         i_errno = IEAFFINITY;
         return -1;
     }
+    printf("API%d: set affinity %d\n", __LINE__, affinity);
     return 0;
 #elif defined(HAVE_SETPROCESSAFFINITYMASK)
 	HANDLE process = GetCurrentProcess();
 	DWORD_PTR processAffinityMask = 1 << affinity;
 
+    printf("API%d: set process affinity\n", __LINE__);
 	if (SetProcessAffinityMask(process, processAffinityMask) == 0) {
 		i_errno = IEAFFINITY;
 		return -1;
@@ -4805,6 +4810,7 @@ iperf_setaffinity(struct iperf_test *test, int affinity)
 	return 0;
 #else /* neither HAVE_SCHED_SETAFFINITY nor HAVE_CPUSET_SETAFFINITY nor HAVE_SETPROCESSAFFINITYMASK */
     i_errno = IEAFFINITY;
+    printf("API%d: no affinity\n", __LINE__);
     return -1;
 #endif /* neither HAVE_SCHED_SETAFFINITY nor HAVE_CPUSET_SETAFFINITY nor HAVE_SETPROCESSAFFINITYMASK */
 }
@@ -4930,5 +4936,6 @@ iperf_printf(struct iperf_test *test, const char* format, ...)
 int
 iflush(struct iperf_test *test)
 {
+    printf("API%d: iflush\n", __LINE__);
     return fflush(test->outfile);
 }
