@@ -561,8 +561,8 @@ iperf_run_client(struct iperf_test * test)
     if (iperf_connect(test) < 0)
         goto cleanup_and_fail;
 
-    alain_dump_settings("client settings", test);
-    alain_dump_socket("client socket", test);
+    alain_dump_settings("client settings 0", test);
+    alain_dump_socket("client socket 0", test);
 
     /* Begin calculating CPU utilization */
     cpu_util(NULL);

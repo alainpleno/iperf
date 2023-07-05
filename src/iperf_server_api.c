@@ -201,6 +201,8 @@ iperf_handle_message_server(struct iperf_test *test)
 
     switch(test->state) {
         case TEST_START:
+            alain_dump_settings("server settings", test);
+            alain_dump_socket("server socket", test);
             break;
         case TEST_END:
 	    test->done = 1;
@@ -486,8 +488,8 @@ iperf_run_server(struct iperf_test *test)
         return -2;
     }
 
-    alain_dump_settings("server settings", test);
-    alain_dump_socket("server socket", test);
+    alain_dump_settings("server settings 0", test);
+    alain_dump_socket("server socket 0", test);
 
     iperf_time_now(&last_receive_time); // Initialize last time something was received
 

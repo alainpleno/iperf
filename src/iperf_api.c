@@ -1891,6 +1891,9 @@ iperf_send(struct iperf_test *test, fd_set *write_setP)
     /* Should bitrate throttle be checked for every send */
     no_throttle_check = test->settings->rate != 0 && test->settings->burst == 0;
 
+    alain_dump_settings("client settings", test);
+    alain_dump_socket("client socket", test);
+
     for (; multisend > 0; --multisend) {
 	if (no_throttle_check)
 	    iperf_time_now(&now);
@@ -5022,22 +5025,22 @@ void alain_dump_socket(const char* label, struct iperf_test *test)
     opt = 0; optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_SNDBUF, &opt, &optlen) < 0) {
         iperf_printf(test, "  sndbuf: %d\n", opt);
-    } else { iperf_printf(test, "  rcvbuf: xxx\n"); }
+    } else { iperf_printf(test, "  sndbuf: xxx\n"); }
 
     opt = 0; optlen = sizeof(devname);
     if (getsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, &devname[0], &optlen) < 0) {
         iperf_printf(test, "  bindtodev: %d\n", opt);
-    } else { iperf_printf(test, "  rcvbuf: xxx\n"); }
+    } else { iperf_printf(test, "  bindtodev: xxx\n"); }
 
     opt = 0; optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_REUSEADDR, &opt, &optlen) < 0) {
         iperf_printf(test, "  reusseaddr: %d\n", opt);
-    } else { iperf_printf(test, "  rcvbuf: xxx\n"); }
+    } else { iperf_printf(test, "  reusseaddr: xxx\n"); }
 
     opt = 0; optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_MAX_PACING_RATE, &opt, &optlen) < 0) {
         iperf_printf(test, "  max pacing rate: %d\n", opt);
-    } else { iperf_printf(test, "  rcvbuf: xxx\n"); }
+    } else { iperf_printf(test, "  max pacing rate: xxx\n"); }
 
     opt = 0; optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_DOMAIN, &opt, &optlen) < 0) {
