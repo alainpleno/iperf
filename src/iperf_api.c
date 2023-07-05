@@ -4941,7 +4941,7 @@ iflush(struct iperf_test *test)
 }
 
 
-#define PRT(ptr, nam, fmt)  printf("  %-20s: " fmt, #nam, ptr->nam)
+#define PRT(ptr, nam, fmt)  iperf_printf(test, "  %-20s: " fmt, #nam, ptr->nam)
 void alain_dump_settings(const char* label, struct iperf_test* test)
 {
     struct iperf_settings* settings;
@@ -4986,182 +4986,182 @@ void alain_dump_socket(const char* label, struct iperf_test *test)
     socklen_t optlen;
 
     if (! test) {
-        printf("--- %s: xxx\n", label);
+        iperf_printf(test, "--- %s: xxx\n", label);
         return ;
     }
     s = test->ctrl_sck;
 
-    printf("--- %s:\n", label);
+    iperf_printf(test, "--- %s:\n", label);
 
     optlen = sizeof(opt);
     if (getsockopt(s, IPPROTO_TCP, TCP_MAXSEG, &opt, &optlen) < 0) {
-        printf("  maxseg: %d\n", opt);
-    } else { printf("  maxseg: xxx\n"); }
+        iperf_printf(test, "  maxseg: %d\n", opt);
+    } else { iperf_printf(test, "  maxseg: xxx\n"); }
 
     optlen = sizeof(congestion);
     if (getsockopt(s, IPPROTO_TCP, TCP_CONGESTION, &congestion[0], &optlen) < 0) {
-        printf("  congestion: %d\n", opt);
-    } else { printf("  congestion: xxx\n"); }
+        iperf_printf(test, "  congestion: %d\n", opt);
+    } else { iperf_printf(test, "  congestion: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, IPPROTO_TCP, TCP_NODELAY, &opt, &optlen)) {
-        printf("  nodelay: %d\n", opt);
-    } else { printf("  nodelay: xxx\n"); }
+        iperf_printf(test, "  nodelay: %d\n", opt);
+    } else { iperf_printf(test, "  nodelay: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, IPPROTO_TCP, TCP_USER_TIMEOUT, &opt, &optlen) < 0) {
-        printf("  user timeout: %d\n", opt);
-    } else { printf("  user timeout: xxx\n"); }
+        iperf_printf(test, "  user timeout: %d\n", opt);
+    } else { iperf_printf(test, "  user timeout: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_RCVBUF, &opt, &optlen) < 0) {
-        printf("  rcvbuf: %d\n", opt);
-    } else { printf("  rcvbuf: xxx\n"); }
+        iperf_printf(test, "  rcvbuf: %d\n", opt);
+    } else { iperf_printf(test, "  rcvbuf: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_SNDBUF, &opt, &optlen) < 0) {
-        printf("  sndbuf: %d\n", opt);
-    } else { printf("  rcvbuf: xxx\n"); }
+        iperf_printf(test, "  sndbuf: %d\n", opt);
+    } else { iperf_printf(test, "  rcvbuf: xxx\n"); }
 
     optlen = sizeof(devname);
     if (getsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, &devname[0], &optlen) < 0) {
-        printf("  bindtodev: %d\n", opt);
-    } else { printf("  rcvbuf: xxx\n"); }
+        iperf_printf(test, "  bindtodev: %d\n", opt);
+    } else { iperf_printf(test, "  rcvbuf: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_REUSEADDR, &opt, &optlen) < 0) {
-        printf("  reusseaddr: %d\n", opt);
-    } else { printf("  rcvbuf: xxx\n"); }
+        iperf_printf(test, "  reusseaddr: %d\n", opt);
+    } else { iperf_printf(test, "  rcvbuf: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_MAX_PACING_RATE, &opt, &optlen) < 0) {
-        printf("  max pacing rate: %d\n", opt);
-    } else { printf("  rcvbuf: xxx\n"); }
+        iperf_printf(test, "  max pacing rate: %d\n", opt);
+    } else { iperf_printf(test, "  rcvbuf: xxx\n"); }
 
     optlen = sizeof(opt);
 
     if (getsockopt(s, SOL_SOCKET, SO_DOMAIN, &opt, &optlen) < 0) {
-        printf("  domain: %d\n", opt);
-    } else { printf("  domain: xxx\n"); }
+        iperf_printf(test, "  domain: %d\n", opt);
+    } else { iperf_printf(test, "  domain: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_ERROR, &opt, &optlen) < 0) {
-        printf("  error: %d\n", opt);
-    } else { printf("  error: xxx\n"); }
+        iperf_printf(test, "  error: %d\n", opt);
+    } else { iperf_printf(test, "  error: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_DONTROUTE, &opt, &optlen) < 0) {
-        printf("  dontroute: %d\n", opt);
-    } else { printf("  dontroute: xxx\n"); }
+        iperf_printf(test, "  dontroute: %d\n", opt);
+    } else { iperf_printf(test, "  dontroute: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_INCOMING_CPU, &opt, &optlen) < 0) {
-        printf("  incoming cpu: %d\n", opt);
-    } else { printf("  incoming cpu: xxx\n"); }
+        iperf_printf(test, "  incoming cpu: %d\n", opt);
+    } else { iperf_printf(test, "  incoming cpu: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_INCOMING_NAPI_ID, &opt, &optlen) < 0) {
-        printf("  incoming napi id: %d\n", opt);
-    } else { printf("  incoming napi id: xxx\n"); }
+        iperf_printf(test, "  incoming napi id: %d\n", opt);
+    } else { iperf_printf(test, "  incoming napi id: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_KEEPALIVE, &opt, &optlen) < 0) {
-        printf("  keepalive: %d\n", opt);
-    } else { printf("  keepalive: xxx\n"); }
+        iperf_printf(test, "  keepalive: %d\n", opt);
+    } else { iperf_printf(test, "  keepalive: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_LINGER, &opt, &optlen) < 0) {
-        printf("  linger: %d\n", opt);
-    } else { printf("  linger: xxx\n"); }
+        iperf_printf(test, "  linger: %d\n", opt);
+    } else { iperf_printf(test, "  linger: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_LOCK_FILTER, &opt, &optlen) < 0) {
-        printf("  lock filter: %d\n", opt);
-    } else { printf("  lock filter: xxx\n"); }
+        iperf_printf(test, "  lock filter: %d\n", opt);
+    } else { iperf_printf(test, "  lock filter: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_MARK, &opt, &optlen) < 0) {
-        printf("  mark: %d\n", opt);
-    } else { printf("  mark: xxx\n"); }
+        iperf_printf(test, "  mark: %d\n", opt);
+    } else { iperf_printf(test, "  mark: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_OOBINLINE, &opt, &optlen) < 0) {
-        printf("  OOB inline: %d\n", opt);
-    } else { printf("  OOB inline: xxx\n"); }
+        iperf_printf(test, "  OOB inline: %d\n", opt);
+    } else { iperf_printf(test, "  OOB inline: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_PEEK_OFF, &opt, &optlen) < 0) {
-        printf("  peek off: %d\n", opt);
-    } else { printf("  peek off: xxx\n"); }
+        iperf_printf(test, "  peek off: %d\n", opt);
+    } else { iperf_printf(test, "  peek off: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_PRIORITY, &opt, &optlen) < 0) {
-        printf("  priority: %d\n", opt);
-    } else { printf("  priority: xxx\n"); }
+        iperf_printf(test, "  priority: %d\n", opt);
+    } else { iperf_printf(test, "  priority: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_PROTOCOL, &opt, &optlen) < 0) {
-        printf("  protocol: %d\n", opt);
-    } else { printf("  protocol: xxx\n"); }
+        iperf_printf(test, "  protocol: %d\n", opt);
+    } else { iperf_printf(test, "  protocol: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_RCVBUFFORCE, &opt, &optlen) < 0) {
-        printf("  rcvbufforce: %d\n", opt);
-    } else { printf("  rcvbufforce: xxx\n"); }
+        iperf_printf(test, "  rcvbufforce: %d\n", opt);
+    } else { iperf_printf(test, "  rcvbufforce: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_RCVLOWAT, &opt, &optlen) < 0) {
-        printf("  rcvlowat: %d\n", opt);
-    } else { printf("  rcvlowat: xxx\n"); }
+        iperf_printf(test, "  rcvlowat: %d\n", opt);
+    } else { iperf_printf(test, "  rcvlowat: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_SNDLOWAT, &opt, &optlen) < 0) {
-        printf("  sndlowat: %d\n", opt);
-    } else { printf("  sndlowat: xxx\n"); }
+        iperf_printf(test, "  sndlowat: %d\n", opt);
+    } else { iperf_printf(test, "  sndlowat: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &opt, &optlen) < 0) {
-        printf("  rcvtimeo: %d\n", opt);
-    } else { printf("  rcvtimeo: xxx\n"); }
+        iperf_printf(test, "  rcvtimeo: %d\n", opt);
+    } else { iperf_printf(test, "  rcvtimeo: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_SNDTIMEO, &opt, &optlen) < 0) {
-        printf("  sndtimeo: %d\n", opt);
-    } else { printf("  sndtimeo: xxx\n"); }
+        iperf_printf(test, "  sndtimeo: %d\n", opt);
+    } else { iperf_printf(test, "  sndtimeo: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_REUSEPORT, &opt, &optlen) < 0) {
-        printf("  reuseport: %d\n", opt);
-    } else { printf("  reuseport: xxx\n"); }
+        iperf_printf(test, "  reuseport: %d\n", opt);
+    } else { iperf_printf(test, "  reuseport: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_RXQ_OVFL, &opt, &optlen) < 0) {
-        printf("  rxq ovfl: %d\n", opt);
-    } else { printf("  rxq ovfl: xxx\n"); }
+        iperf_printf(test, "  rxq ovfl: %d\n", opt);
+    } else { iperf_printf(test, "  rxq ovfl: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_SELECT_ERR_QUEUE, &opt, &optlen) < 0) {
-        printf("  select err q: %d\n", opt);
-    } else { printf("  select err q: xxx\n"); }
+        iperf_printf(test, "  select err q: %d\n", opt);
+    } else { iperf_printf(test, "  select err q: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_SNDBUFFORCE, &opt, &optlen) < 0) {
-        printf("  sndbufforce: %d\n", opt);
-    } else { printf("  sndbufforce: xxx\n"); }
+        iperf_printf(test, "  sndbufforce: %d\n", opt);
+    } else { iperf_printf(test, "  sndbufforce: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_TIMESTAMP, &opt, &optlen) < 0) {
-        printf("  timestamp: %d\n", opt);
-    } else { printf("  timestamp: xxx\n"); }
+        iperf_printf(test, "  timestamp: %d\n", opt);
+    } else { iperf_printf(test, "  timestamp: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_TIMESTAMPNS, &opt, &optlen) < 0) {
-        printf("  timestampns: %d\n", opt);
-    } else { printf("  timestampns: xxx\n"); }
+        iperf_printf(test, "  timestampns: %d\n", opt);
+    } else { iperf_printf(test, "  timestampns: xxx\n"); }
 
     optlen = sizeof(opt);
     if (getsockopt(s, SOL_SOCKET, SO_BUSY_POLL, &opt, &optlen) < 0) {
-        printf("  busy poll: %d\n", opt);
-    } else { printf("  busy poll: xxx\n"); }
+        iperf_printf(test, "  busy poll: %d\n", opt);
+    } else { iperf_printf(test, "  busy poll: xxx\n"); }
 }
 

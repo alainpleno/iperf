@@ -486,8 +486,8 @@ iperf_run_server(struct iperf_test *test)
         return -2;
     }
 
-    alain_dump_settings("server settings", test->settings);
-    alain_dump_socket("server socket", test->ctrl_sck);
+    alain_dump_settings("server settings", test);
+    alain_dump_socket("server socket", test);
 
     iperf_time_now(&last_receive_time); // Initialize last time something was received
 
