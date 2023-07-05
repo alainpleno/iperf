@@ -4981,6 +4981,7 @@ void alain_dump_settings(const char* label, struct iperf_test* test)
 void alain_dump_socket(const char* label, struct iperf_test *test)
 {
     int opt;
+    int s;
     char congestion[64];
     char devname[IFNAMSIZ];
     socklen_t optlen;
