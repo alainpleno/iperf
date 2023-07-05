@@ -308,6 +308,10 @@ iperf_handle_message_client(struct iperf_test *test)
 	    if (test->mode)
 		if (iperf_create_send_timers(test) < 0)
 		    return -1;
+
+            alain_dump_settings("client settings", test);
+            alain_dump_socket("client socket", test);
+
             break;
         case TEST_RUNNING:
             break;

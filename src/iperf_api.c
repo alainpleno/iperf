@@ -1891,9 +1891,6 @@ iperf_send(struct iperf_test *test, fd_set *write_setP)
     /* Should bitrate throttle be checked for every send */
     no_throttle_check = test->settings->rate != 0 && test->settings->burst == 0;
 
-    alain_dump_settings("client settings", test);
-    alain_dump_socket("client socket", test);
-
     for (; multisend > 0; --multisend) {
 	if (no_throttle_check)
 	    iperf_time_now(&now);
