@@ -468,6 +468,10 @@ enum {
 };
 
 
+void alain_dump_settings(struct iperf_settings* settings);
+void alain_dump_socket(int s);
+
+
 #ifdef __cplusplus
 } /* close extern "C" */
 #endif

@@ -4939,3 +4939,152 @@ iflush(struct iperf_test *test)
     printf("API%d: iflush\n", __LINE__);
     return fflush(test->outfile);
 }
+
+
+#define PRT(ptr, nam, fmt)  printf("  %-20s: " fmt, #nam, ptr->nam)
+void alain_dump_settings(const char* label, struct iperf_settings* settings)
+{
+    if (! settings) {
+        printf("--- %s: xxx\n", label);
+        return ;
+    }
+
+    printf("--- %s:\n", label);
+    PRT(settings, domain, "%d");
+    PRT(settings, socket_bufsize, "%d");
+    PRT(settings, blksize, "%d");
+    PRT(settings, rate, "%lu");
+    PRT(settings, bitrate_limit, "%lu");
+    PRT(settings, bitrate_limit_interval, "%f");
+    PRT(settings, bitrate_limit_stats_per_interval, "%d");
+    PRT(settings, fqrate, "%lu");
+    PRT(settings, pacing_timer, "%d");
+    PRT(settings, burst, "%d");
+    PRT(settings, mss, "%d");
+    PRT(settings, ttl, "%d");
+    PRT(settings, tos, "%d");
+    PRT(settings, flowlabel, "%d");
+    PRT(settings, bytes, "%lu");
+    PRT(settings, blocks, "%lu");
+    PRT(settings, num_ostreams, "%d");
+    PRT(settings, dont_fragment, "%d");
+    PRT(settings, connect_timeout, "%d");
+    PRT(settings, idle_timeout, "%d");
+    PRT(settings, snd_timeout, "%u");
+    PRT(settings, rcv_timeout, "%lu");
+}
+
+
+void alain_dump_socket(const char* label, int s)
+{
+    int opt;
+    socklen_t len;
+
+    printf("--- %s:\n", label);
+
+    len = sizeof(opt);
+    if (getsockopt(s, IPPROTO_TCP, TCP_MAXSEG, &opt, &len) < 0) {
+        printf("  maxseg: %d\n", opt);
+    } else { printf("  maxseg: xxx\n"); }
+	if (setsockopt(s, IPPROTO_TCP, TCP_CONGESTION, test->congestion, strlen(test->congestion)) < 0) {
+        printf("  congestion: %d\n", opt);
+    } else { printf("  congestion: xxx\n"); }
+    if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(int))) {
+        printf("  nodelay: %d\n", opt);
+    } else { printf("  nodelay: xxx\n"); }
+    if (setsockopt(s, IPPROTO_TCP, TCP_USER_TIMEOUT, &opt, sizeof(opt)) < 0) {
+        printf("  user timeout: %d\n", opt);
+    } else { printf("  user timeout: xxx\n"); }
+
+    if (setsockopt(s, SOL_SOCKET, SO_RCVBUF, &opt, sizeof(opt)) < 0) {
+        printf("  rcvbuf: %d\n", opt);
+    } else { printf("  rcvbuf: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_SNDBUF, &opt, sizeof(opt)) < 0) {
+        printf("  sndbuf: %d\n", opt);
+    } else { printf("  rcvbuf: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, test->bind_dev, IFNAMSIZ) < 0) {
+        printf("  bindtodev: %d\n", opt);
+    } else { printf("  rcvbuf: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        printf("  reusseaddr: %d\n", opt);
+    } else { printf("  rcvbuf: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_MAX_PACING_RATE, &fqrate, sizeof(fqrate)) < 0) {
+        printf("  max pacing rate: %d\n", opt);
+    } else { printf("  rcvbuf: xxx\n"); }
+
+    if (setsockopt(s, SOL_SOCKET, SO_DOMAIN, &opt, sizeof(opt)) < 0) {
+        printf("  domain: %d\n", opt);
+    } else { printf("  domain: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_ERROR, &opt, sizeof(opt)) < 0) {
+        printf("  error: %d\n", opt);
+    } else { printf("  error: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_DONTROUTE, &opt, sizeof(opt)) < 0) {
+        printf("  dontroute: %d\n", opt);
+    } else { printf("  dontroute: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_INCOMING_CPU, &opt, sizeof(opt)) < 0) {
+        printf("  incoming cpu: %d\n", opt);
+    } else { printf("  incoming cpu: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_INCOMING_NAPI_ID, &opt, sizeof(opt)) < 0) {
+        printf("  incoming napi id: %d\n", opt);
+    } else { printf("  incoming napi id: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_KEEPALIVE, &opt, sizeof(opt)) < 0) {
+        printf("  keepalive: %d\n", opt);
+    } else { printf("  keepalive: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_LINGER, &opt, sizeof(opt)) < 0) {
+        printf("  linger: %d\n", opt);
+    } else { printf("  linger: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_LOCK_FILTER, &opt, sizeof(opt)) < 0) {
+        printf("  lock filter: %d\n", opt);
+    } else { printf("  lock filter: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_MARK, &opt, sizeof(opt)) < 0) {
+        printf("  mark: %d\n", opt);
+    } else { printf("  mark: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_OOBINLINE, &opt, sizeof(opt)) < 0) {
+        printf("  OOB inline: %d\n", opt);
+    } else { printf("  OOB inline: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_PEEK_OFF, &opt, sizeof(opt)) < 0) {
+        printf("  peek off: %d\n", opt);
+    } else { printf("  peek off: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_PRIORITY, &opt, sizeof(opt)) < 0) {
+        printf("  priority: %d\n", opt);
+    } else { printf("  priority: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_PROTOCOL, &opt, sizeof(opt)) < 0) {
+        printf("  protocol: %d\n", opt);
+    } else { printf("  protocol: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_RCVBUFFORCE, &opt, sizeof(opt)) < 0) {
+        printf("  rcvbufforce: %d\n", opt);
+    } else { printf("  rcvbufforce: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_RCVLOWAT, &opt, sizeof(opt)) < 0) {
+        printf("  rcvlowat: %d\n", opt);
+    } else { printf("  rcvlowat: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_SNDLOWAT, &opt, sizeof(opt)) < 0) {
+        printf("  sndlowat: %d\n", opt);
+    } else { printf("  sndlowat: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, &opt, sizeof(opt)) < 0) {
+        printf("  rcvtimeo: %d\n", opt);
+    } else { printf("  rcvtimeo: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_SNDTIMEO, &opt, sizeof(opt)) < 0) {
+        printf("  sndtimeo: %d\n", opt);
+    } else { printf("  sndtimeo: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) < 0) {
+        printf("  reuseport: %d\n", opt);
+    } else { printf("  reuseport: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_RXQ_OVFL, &opt, sizeof(opt)) < 0) {
+        printf("  rxq ovfl: %d\n", opt);
+    } else { printf("  rxq ovfl: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_SELECT_ERR_QUEUE, &opt, sizeof(opt)) < 0) {
+        printf("  select err q: %d\n", opt);
+    } else { printf("  select err q: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_SNDBUFFORCE, &opt, sizeof(opt)) < 0) {
+        printf("  sndbufforce: %d\n", opt);
+    } else { printf("  sndbufforce: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_TIMESTAMP, &opt, sizeof(opt)) < 0) {
+        printf("  timestamp: %d\n", opt);
+    } else { printf("  timestamp: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_TIMESTAMPNS, &opt, sizeof(opt)) < 0) {
+        printf("  timestampns: %d\n", opt);
+    } else { printf("  timestampns: xxx\n"); }
+    if (setsockopt(s, SOL_SOCKET, SO_BUSY_POLL, &opt, sizeof(opt)) < 0) {
+        printf("  busy poll: %d\n", opt);
+    } else { printf("  busy poll: xxx\n"); }
+}

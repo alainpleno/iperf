@@ -561,6 +561,9 @@ iperf_run_client(struct iperf_test * test)
     if (iperf_connect(test) < 0)
         goto cleanup_and_fail;
 
+    alain_dump_settings("client settings", test->settings);
+    alain_dump_socket("client socket", test->ctrl_sck);
+
     /* Begin calculating CPU utilization */
     cpu_util(NULL);
     if (test->mode != SENDER)
@@ -628,6 +631,7 @@ iperf_run_client(struct iperf_test * test)
 
 		// Set non-blocking for non-UDP tests
 		if (test->protocol->id != Pudp) {
+            printf("  run_client: non-blocking %d\n", __LINE__);
 		    SLIST_FOREACH(sp, &test->streams, streams) {
 			setnonblocking(sp->socket, 1);
 		    }
@@ -673,6 +677,7 @@ iperf_run_client(struct iperf_test * test)
 
 		// Unset non-blocking for non-UDP tests
 		if (test->protocol->id != Pudp) {
+            printf("  run_client: non-blocking %d\n", __LINE__);
 		    SLIST_FOREACH(sp, &test->streams, streams) {
 			setnonblocking(sp->socket, 0);
 		    }
