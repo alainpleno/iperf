@@ -4942,12 +4942,15 @@ iflush(struct iperf_test *test)
 
 
 #define PRT(ptr, nam, fmt)  printf("  %-20s: " fmt, #nam, ptr->nam)
-void alain_dump_settings(const char* label, struct iperf_settings* settings)
+void alain_dump_settings(const char* label, struct iperf_test* test)
 {
-    if (! settings) {
+    struct iperf_settings* settings;
+
+    if (! test) {
         printf("--- %s: xxx\n", label);
         return ;
     }
+    settings = test->settings;
 
     printf("--- %s:\n", label);
     PRT(settings, domain, "%d");
@@ -4975,12 +4978,18 @@ void alain_dump_settings(const char* label, struct iperf_settings* settings)
 }
 
 
-void alain_dump_socket(const char* label, int s)
+void alain_dump_socket(const char* label, struct iperf_test *test)
 {
     int opt;
     char congestion[64];
     char devname[IFNAMSIZ];
     socklen_t optlen;
+
+    if (! test) {
+        printf("--- %s: xxx\n", label);
+        return ;
+    }
+    s = test->ctrl_sck;
 
     printf("--- %s:\n", label);
 

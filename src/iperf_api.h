@@ -44,7 +44,6 @@ struct iperf_stream_result;
 struct iperf_interval_results;
 struct iperf_stream;
 struct iperf_time;
-struct iperf_settings;
 
 #if !defined(__IPERF_H)
 typedef uint64_t iperf_size_t;
@@ -469,8 +468,8 @@ enum {
 };
 
 
-void alain_dump_settings(const char* label, struct iperf_settings* settings);
-void alain_dump_socket(const char* label, int s);
+void alain_dump_settings(const char* label, struct iperf_test* test);
+void alain_dump_socket(const char* label, struct iperf_test* test);
 
 
 #ifdef __cplusplus
